@@ -1,7 +1,9 @@
 
-import { Client } from "react-native-appwrite";
+import { Account, Client } from "react-native-appwrite";
 
-const client = new Client()
-.setEndpoint("https://fra.cloud.appwrite.io/v1")
-.setProject("6847c50f003853827abc")
-.setPlatform("com.habit-tracker-app");
+export const client = new Client()
+.setEndpoint(process.env.EXPO_PUBLIC_APPWRITE_ENDPOINT!)
+.setProject(process.env.EXPO_PUBLIC_APPWRITE_PROJECT_ID!)
+.setPlatform(process.env.EXPO_PUBLIC_APPWRITE_PLATFORM!);
+    
+export const account = new Account(client);

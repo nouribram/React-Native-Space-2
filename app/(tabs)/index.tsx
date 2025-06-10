@@ -26,19 +26,3 @@ const styles =  StyleSheet.create({
   }
 });
 
-
-/*
-
-git clone https://github.com/appwrite/starter-for-react-native
-
-cd starter-for-react-native
-
-const APPWRITE_PROJECT_ID = "6847c50f003853827abc";
-
-*/
-
-/*
-
-EXPO_PUBLIC_APPWRITE_ENDPOINT=
-
-*/
