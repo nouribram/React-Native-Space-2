@@ -25,3 +25,13 @@ const styles =  StyleSheet.create({
     textAlign: "center", 
   }
 });
+
+
+/*
+
+git clone https://github.com/appwrite/starter-for-react-native
+cd starter-for-react-native
+
+const APPWRITE_PROJECT_ID = "6847c50f003853827abc";
+
+*/
