@@ -1,15 +1,22 @@
-import { Button } from "@react-navigation/elements";
 import { KeyboardAvoidingView, Platform, View} from "react-native";
-import {Text, TextInput} from "react-native-paper";
+import {Text, Button, TextInput} from "react-native-paper";
+import { useState } from "react";
 
 export default function AuthScreen() {
-    return ( 
+  
+  const [isSignUp,setIsSignup ] = useState<boolean>(false);
+  
+  const  handleSwitchMode = () => {
+     setIsSignup((prev) => !prev)    
+  }
+  
+  return ( 
     <KeyboardAvoidingView 
     
     behavior={Platform.OS === "ios" ? "padding" : "height"}>
 
         <View>
-            <Text> Create account</Text>
+            <Text> {isSignUp ? "Create Account" : "Welcome back"}</Text>
              <TextInput 
              label="Email"
              autoCapitalize="none" 
@@ -25,8 +32,9 @@ export default function AuthScreen() {
              mode="outlined"
              />
 
-             <Button> Sign up </Button>
-      
+             <Button mode="contained"> {isSignUp ? "Sign Up" : "Log in"} </Button>
+             <Button mode="text" onPress={handleSwitchMode}> {isSignUp ? "Already have an account ? sign in" : "do not have an account sign up"}</Button>
+
         </View>
   
     </KeyboardAvoidingView>
