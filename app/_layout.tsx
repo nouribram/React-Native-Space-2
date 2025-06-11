@@ -1,12 +1,32 @@
 import { Stack } from "expo-router";
+import { useEffect } from "react";
 
-export default function TabsLayout() {
+
+function RouteGuard({children}: {children: React.ReactNode}) {
+
+  const isAuth = false;
+
+  useEffect(() => {
+  if(!isAuth) {
+
+    
+    
+  }
+
+})
+
+}
+
+
+export default function RootLayout() {
   return (
     <Stack>
        <Stack.Screen name="(tabs)" options={{ headerShown: false}} />
     </Stack>
   );
 }
+
+
 
 /*
 app write.ts
