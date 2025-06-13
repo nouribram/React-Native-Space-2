@@ -50,7 +50,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
-  const signIn = async (email: string, password: string): Promise<string | null> => {
+  const signIn = async (email: string, password: string) => {
     try {
       await account.createEmailPasswordSession(email, password);
       return null;

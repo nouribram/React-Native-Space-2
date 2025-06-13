@@ -5,7 +5,7 @@ import { AuthProvider, useAuth} from "@/lib/auth-context";
 function RouteGuard({ children } : { children: React.ReactNode }) {
  
   const router = useRouter();
- // const [isMounted, setIsMounted] = useState(false);
+ // const [isMounted, setIsounted] = useState(false);
   const { user, isLoadingUser } = useAuth();
   const segment = useSegments()
   

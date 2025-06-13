@@ -10,7 +10,7 @@ export default function Index() {
   return (
     <View style={styles.view} >
       <Text> Hello Nourhan</Text>
-      <Button mode="text" onPress={signOut}>Sign out</Button>
+      <Button mode="text" onPress={signOut} icon={"logout"}>Sign out</Button>
     </View>
   );
 }
