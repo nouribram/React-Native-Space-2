@@ -1,6 +1,8 @@
 import { KeyboardAvoidingView, StyleSheet, Platform, View} from "react-native";
 import {Text, Button, TextInput, useTheme} from "react-native-paper";
 import { useState } from "react";
+import { useRouter } from "expo-router";
+import { useAuth } from "@/lib/auth-context";
 
 export default function AuthScreen() {
   
@@ -9,9 +11,12 @@ export default function AuthScreen() {
   const [password, setPassword] = useState<string>("")
   const [error, setError] = useState<string | null>("")
   const theme = useTheme();
- 
+  const router = useRouter();
+
+  const { signIn, signUp } = useAuth();
+
   const handleAuth = async () => {
-     if (!email || !password){
+     if (!email || !password) {
          setError("please fill it");
          return;
      }
@@ -20,7 +25,25 @@ export default function AuthScreen() {
         setError("password must be at least 6 characters long.");
         return;
      }
-  }
+
+     setError(null);
+
+     if (isSignUp) {
+        const error = await signUp(email, password);
+        if (error) {
+            setError(error)
+            return 
+        }
+     } else {
+        const error =  await signIn(email, password);
+        if (error) {
+            setError(error);
+            return;
+        }
+
+        router.replace("/");
+     }
+  };
 
   const  handleSwitchMode = () => {
      setIsSignup((prev) => !prev);
@@ -50,8 +73,8 @@ export default function AuthScreen() {
             <TextInput 
              label="Password"
              autoCapitalize="none" 
-             keyboardType="email-address"
              mode="outlined"
+             secureTextEntry
              style={styles.input}
              onChangeText={setPassword}
              />

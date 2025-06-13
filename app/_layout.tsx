@@ -1,35 +1,39 @@
-import { Stack, useRouter } from "expo-router";
+import { Stack, useRouter, useSegments } from "expo-router";
 import { useEffect, useState  } from "react";
+import { AuthProvider, useAuth} from "@/lib/auth-context";
 
-
-function RouteGuard({children}: {children: React.ReactNode}) {
+function RouteGuard({ children } : { children: React.ReactNode }) {
  
   const router = useRouter();
-  const [isMounted, setIsMounted] = useState(false);
-  const isAuth = false;
-
+ // const [isMounted, setIsMounted] = useState(false);
+  const { user, isLoadingUser } = useAuth();
+  const segment = useSegments()
+  
   useEffect(() => {
-    setIsMounted(true);
-  }, []);
-
-  useEffect(() => {
-    if (isMounted && !isAuth ){
-      router.replace("/auth");
+    const inAuthGroup = segment[0] === "auth";
+   
+    if (!user && !inAuthGroup && !isLoadingUser) {
+       router.replace("/auth");
+    } else if(user && inAuthGroup && !isLoadingUser) {
+      router.replace("/");
     }
-  }, [isMounted]);
+  }, [user, segments]);
 
- 
  return <>{children}</>;
+
 }
 
 
 export default function RootLayout() {
   return (
-    <RouteGuard>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false}} />
-      </Stack>
-    </RouteGuard>
+    <AuthProvider>
+        <RouteGuard>
+        <Stack>
+          <Stack.Screen name="(tabs)" options={{ headerShown: false}} />
+        </Stack>
+      </RouteGuard>
+    </AuthProvider>
+    
   );
 }
 
