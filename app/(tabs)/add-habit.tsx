@@ -13,8 +13,16 @@ export default function AddHabitScreen() {
     const {user} = useAuth()
     const handleSubmit = async () => {
         if (!user) return;
-        await databases.createDocument(DATABASE_ID, HABITS_COLLECTION_ID, ID.unique())
-    }
+
+        await databases.createDocument(
+            DATABASE_ID,
+             HABITS_COLLECTION_ID, 
+             ID.unique(),
+             {
+                user_id: user.$id
+             }
+        );
+    };
     return (
         <View style={styles.container}>
             <TextInput label="Title" mode="outlined" onChangeText={setTitle} style={styles.input} />
