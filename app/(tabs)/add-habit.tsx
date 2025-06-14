@@ -19,7 +19,12 @@ export default function AddHabitScreen() {
              HABITS_COLLECTION_ID, 
              ID.unique(),
              {
-                user_id: user.$id
+                user_id: user.$id,
+                title,
+                description,
+                frequency,
+                streak_count: 0,
+                last_completed: new Date().toISOString(),
              }
         );
     };
