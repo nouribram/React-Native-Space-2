@@ -1,8 +1,9 @@
 import { Background } from "@react-navigation/elements";
-import { Text, View, StyleSheet } from "react-native";
+import {  View, StyleSheet } from "react-native";
 import { useState } from "react";
-import { Button, SegmentedButtons, TextInput } from "react-native-paper";
+import { Button, Text, SegmentedButtons, useTheme, TextInput } from "react-native-paper";
 import { Databases } from "react-native-appwrite";
+import { ID } from "react-native-appwrite";
 
 const FREQUENCIES = ["daily", "weekly", "monthly"];
 type Frequency = (typeof FREQUENCIES)(number);
@@ -10,10 +11,14 @@ export default function AddHabitScreen() {
     const [title, setTitle] = useState<string>("");
     const [Description, setDescription] = useState<string>("");
     const [frequency, setFrequency] = useState<Frequency>("daily");
-    const {user} = useAuth()
+    const {error, setError} = useState<string>("");
+    const {user} = useAuth();
+    const router = useRouter();
+    const theme = useTheme();
     const handleSubmit = async () => {
         if (!user) return;
-
+           
+        try {
         await databases.createDocument(
             DATABASE_ID,
              HABITS_COLLECTION_ID, 
@@ -25,8 +30,18 @@ export default function AddHabitScreen() {
                 frequency,
                 streak_count: 0,
                 last_completed: new Date().toISOString(),
+                created_at: new Date().toISOString(),
              }
         );
+
+        router.back();
+    } catch(error){
+      if(error instanceof Error){
+        setError(error.message);
+        return;
+      }
+      setError("there was an error creating the habit")
+    }
     };
     return (
         <View style={styles.container}>
@@ -45,6 +60,8 @@ export default function AddHabitScreen() {
                <Button mode="contained" onPress={handleSubmit} disabled={!title || !description}>
                 Add Habit
                </Button>
+                {error && <Text style={{ color: theme.colors.error}}>{error}</Text>}
+               
         </View>
     );
 }

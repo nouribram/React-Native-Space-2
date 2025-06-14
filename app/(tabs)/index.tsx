@@ -6,7 +6,15 @@ import { useAuth } from "@/lib/auth-context";
 
 
 export default function Index() {
-  const { signOut } = useAuth(); 
+  const { signOut } = useAuth();
+  const fetchHabits = async () => {
+    try {
+      const response = await databases.listDocuments(DATABASE_ID, HABITS_COLLECTION_ID, []);
+
+    } catch(error) {
+      console.error(error);
+    }
+  }
   return (
     <View style={styles.view} >
       <Text> Hello Nourhan</Text>
