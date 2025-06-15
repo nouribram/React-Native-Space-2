@@ -123,11 +123,25 @@ const styles = StyleSheet.create({
 
 });
 
-/* 
+/*
 
-export const account = new Account(client);
-export const databases = new Databases(client);
+export interface Habit extends Models.Document {
+ user_id: string;
+ title: string;
+ description: string;
+ frequency: string;
+ streak_count: number;
+ last_completed: string;
+ created_at: string;
+ 
+}
 
-export const DATABASE_ID = process.env.EXPO_PUBLIC_DB_ID!;
-const HABITS_COLLECTION_ID = process.env.EXPO_PUBLIC_HABITS_DB_ID!;
+
+
+
+
+
+
+
+
 */
