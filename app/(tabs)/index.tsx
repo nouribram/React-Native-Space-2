@@ -1,6 +1,6 @@
-import { Text, View, StyleSheet } from "react-native";
+import { View, StyleSheet } from "react-native";
 import {Link} from 'expo-router'
-import { Button } from "react-native-paper";
+import { Button, Text } from "react-native-paper";
 import { use, useEffect, useState } from "react";
 import { useAuth } from "@/lib/auth-context";
 import { Query } from "react-native-appwrite";
@@ -20,18 +20,24 @@ export default function Index() {
          HABITS_COLLECTION_ID, 
          [Query.equal("user_id", user?.$id ?? "" )]
         );
-        console.log(response.documents);
         setHabits(response.documents as Habit[]);
           
     } catch (error) {
       console.error(error);
     }
-  }
+  };
   
   return (
-    <View style={styles.view} >
-      <Text> Hello Nourhan</Text>
-      <Button mode="text" onPress={signOut} icon={"logout"}>Sign out</Button>
+    <View style={styles.view}>
+       <View>
+        <Text variant="headlineSmall">Today’s Habits</Text>
+        <Button mode="text" onPress={signOut} icon={"logout"}>
+          Sign out
+        </Button>
+       </View>
+       {habits?.length === 0 ? (
+        
+       )}
     </View>
   );
 }
