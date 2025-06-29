@@ -4,6 +4,7 @@ import { Button, Text } from "react-native-paper";
 import { use, useEffect, useState } from "react";
 import { useAuth } from "@/lib/auth-context";
 import { Query } from "react-native-appwrite";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 
 export default function Index() {
@@ -28,15 +29,41 @@ export default function Index() {
   };
   
   return (
-    <View style={styles.view}>
-       <View>
-        <Text variant="headlineSmall">Today’s Habits</Text>
+    <View style={styles.container}>
+       <View style={styles.header}>
+        <Text variant="headlineSmall" style={styles.title}>Today’s Habits</Text>
         <Button mode="text" onPress={signOut} icon={"logout"}>
           Sign out
         </Button>
        </View>
        {habits?.length === 0 ? (
-        
+        <View style={styles.empty}>
+          <Text>No Habits yet</Text>
+        </View>
+       ):(
+        habits?.map((habit, key) => (
+        <View key={key}>
+           <Text> {habit.title} </Text>
+           <Text> {habit.description}</Text>
+           <View>
+              <View>
+                 <MaterialCommunityIcons 
+                 name="fire" 
+                 size={18}
+                 color={"#ff9800"}
+                 /> 
+                 <Text>
+                   {habit.streak_count} day streak
+                 </Text>
+              </View>
+              <View>
+                 <Text> 
+                  {""}
+                  {habit.frequency.charAt(0).toUpperCase() + habit.frequency.slice(1)} </Text>
+              </View>
+           </View>
+       </View>
+        ))
        )}
     </View>
   );
