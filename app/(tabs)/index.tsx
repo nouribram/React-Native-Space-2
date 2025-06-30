@@ -7,13 +7,46 @@ import { Query } from "react-native-appwrite";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import CardContent from "react-native-paper/lib/typescript/components/Card/CardContent";
 
-
+//appwrite 
+/*export interface RealtimeResponse {
+  events: string[];
+  payload: any;
+}*/
 export default function Index() {
   const { signOut, user } = useAuth();
   const [habits, setHabits] = useState<Habit[]>()
  
  useEffect(() => {
-  fetchHabits();
+   
+  if (user) {
+  const channel = `databases.${DATABASE_ID}.collections.${HABITS_COLLECTION_ID}.documents`,
+  const habitsSubscription = client.subscribe(
+     channel,
+    (response: RealtimeResponse) => {
+      if(
+        response.events.includes(
+        "databases.*.collections.*.documents.*.create"
+      )
+    ){
+        fetchHabits();
+
+    } else if(
+       response.events.includes(
+        "databases.*.collections.*.documents.*.update"
+      )
+    ){
+        fetchHabits();
+    }
+    
+   }
+  );
+
+   fetchHabits();
+
+   return () => {
+    habitsSubscription();
+   }
+  }
  }, [user]);
  
   const fetchHabits = async () => {
