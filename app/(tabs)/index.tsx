@@ -1,11 +1,12 @@
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, ScrollView } from "react-native";
 import {Link} from 'expo-router'
 import { Button, Text, Surface } from "react-native-paper";
-import { use, useEffect, useState } from "react";
+import { use, useEffect, useRef, useState } from "react";
 import { useAuth } from "@/lib/auth-context";
 import { Query } from "react-native-appwrite";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import CardContent from "react-native-paper/lib/typescript/components/Card/CardContent";
+import { Swipeable } from "react-native-gesture-handler";
 
 //appwrite 
 /*export interface RealtimeResponse {
@@ -13,12 +14,16 @@ import CardContent from "react-native-paper/lib/typescript/components/Card/CardC
   payload: any;
 }*/
 export default function Index() {
+
   const { signOut, user } = useAuth();
   const [habits, setHabits] = useState<Habit[]>()
  
+  const SwipeableRefs = useRef<{ [key: string]: Swipeable | null}> ({})
+
  useEffect(() => {
    
   if (user) {
+
   const channel = `databases.${DATABASE_ID}.collections.${HABITS_COLLECTION_ID}.documents`,
   const habitsSubscription = client.subscribe(
      channel,
@@ -63,6 +68,28 @@ export default function Index() {
     }
   };
   
+  const handleDeleteHabit = async () => {
+
+  } 
+  const renderRightActions = () => (
+    <View style={styles.swipeActionRight}>
+      <MaterialCommunityIcons 
+      name="check-circle-outline" 
+       size={32} 
+       color={"#ffff"}/>
+    </View>
+  )
+
+  const renderLeftActions = () => {
+     <View style={styles.swipeActionLeft}>
+      <MaterialCommunityIcons 
+      name="trash-can-outline" 
+       size={32} 
+       color={"#ffff"}/>
+    </View>
+  };
+
+
   return (
     <View style={styles.container}>
        <View style={styles.header}>
@@ -71,14 +98,30 @@ export default function Index() {
           Sign out
         </Button>
        </View>
+
+       <ScrollView showsVerticalScrollIndicator={false}>
        {habits?.length === 0 ? (
         <View style={styles.emptyStateText}>
           <Text>No Habits yet</Text>
         </View>
        ):(
         habits?.map((habit, key) => (
-          <Surface style={styles.card} elevation={0}>
-        <View key={key} style={styles.cardContent}>
+         <Swipeable ref={(ref) => {
+          SwipeableRefs.current[habit.$id] = ref
+         }}
+          key ={key}
+          overshootLeft={false}
+          overshootRight={false}
+          renderLeftActions={renderLeftActions}
+          renderRightActions={renderRightActions}
+          onSwipeableOpen={(direction) => {
+           if (direction === "left"){
+            handleDeleteHabit()
+           }
+          }}
+        >
+        <Surface style={styles.card} elevation={0}>
+        <View  style={styles.cardContent}>
            <Text style={styles.cardTitle}> {habit.title} </Text>
            <Text style={styles.cardDescription}> {habit.description}</Text>
            <View style={styles.cardFooter}>
@@ -100,8 +143,10 @@ export default function Index() {
            </View>
        </View>
        </Surface>
+       </Swipeable> 
         ))
        )}
+       </ScrollView>
     </View>
   );
 }
@@ -169,7 +214,27 @@ const styles =  StyleSheet.create({
    }
    emptyStateText:{
     color: "#666666",
-   }
+   },
+   swipeActionLeft: {
+     justifyContent: "center",
+     alignItems: "flex-end",
+     flex: 1,
+     backgroundColor: "#e53935",
+     borderRadius: 18,
+     marginBottom: 18,
+    marginTop: 2,
+    paddingLeft: 16,
+   },
+    swipeActionRight: {
+      justifyContent: "center",
+      alignItems: "flex-end",
+      flex: 1,
+      backgroundColor: "#4caf50",
+      borderRadius: 18,
+      marginBottom: 18,
+     marginTop: 2,
+     paddingRight: 16,
+   },
 });
 
 
