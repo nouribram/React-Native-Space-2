@@ -1,6 +1,6 @@
 import { View, StyleSheet } from "react-native";
 import {Link} from 'expo-router'
-import { Button, Text } from "react-native-paper";
+import { Button, Text, Surface } from "react-native-paper";
 import { use, useEffect, useState } from "react";
 import { useAuth } from "@/lib/auth-context";
 import { Query } from "react-native-appwrite";
@@ -14,7 +14,8 @@ export default function Index() {
  
  useEffect(() => {
   fetchHabits();
- }, [user])
+ }, [user]);
+ 
   const fetchHabits = async () => {
     try {
       const response = await databases.listDocuments(
@@ -115,7 +116,27 @@ const styles =  StyleSheet.create({
   cardFooter: {
     flexDirection: "row",
     justifyContent: "space-between",
-  }
+    alignItems: "center", 
+  },
+  frequencyBadge: {
+    backgroundColor: "#ede7f6",
+    borderRadius: 12,
+    paddingHorizontal: 12,
+    paddingVertical: 4,
+  },
+   frequencyText: {
+    color: "#7c4dff",
+    fontWeight: "bold",
+    fontSize: 14,
+   },
+   emptyState:{
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+   }
+   emptyStateText:{
+    color: "#666666",
+   }
 });
 
 
