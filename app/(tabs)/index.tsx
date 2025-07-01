@@ -3,7 +3,7 @@ import {Link} from 'expo-router'
 import { Button, Text, Surface } from "react-native-paper";
 import { use, useEffect, useRef, useState } from "react";
 import { useAuth } from "@/lib/auth-context";
-import { Query } from "react-native-appwrite";
+import { Databases, Query } from "react-native-appwrite";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import CardContent from "react-native-paper/lib/typescript/components/Card/CardContent";
 import { Swipeable } from "react-native-gesture-handler";
@@ -68,9 +68,16 @@ export default function Index() {
     }
   };
   
-  const handleDeleteHabit = async () => {
+  const handleDeleteHabit = async (id: string) => {
+       try {
+           
+        await databases.deleteDocument(DATABASE_ID, HABITS_COLLECTION_ID, id);
+       } catch (error) {
+         console.error(error);
+       }
+  };
 
-  } 
+
   const renderRightActions = () => (
     <View style={styles.swipeActionRight}>
       <MaterialCommunityIcons 
@@ -116,7 +123,7 @@ export default function Index() {
           renderRightActions={renderRightActions}
           onSwipeableOpen={(direction) => {
            if (direction === "left"){
-            handleDeleteHabit()
+            handleDeleteHabit(habit.$id);
            }
           }}
         >
