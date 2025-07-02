@@ -92,7 +92,7 @@ export default function Index() {
       <MaterialCommunityIcons 
       name="trash-can-outline" 
        size={32} 
-       color={"#ffff"}/>
+       color={"#fff0"}/>
     </View>
   };
 
