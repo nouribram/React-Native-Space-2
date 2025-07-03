@@ -5,7 +5,7 @@ import { use, useEffect, useRef, useState } from "react";
 import { useAuth } from "@/lib/auth-context";
 import { Databases, Query } from "react-native-appwrite";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import CardContent from "react-native-paper/lib/typescript/components/Card/CardContent";
+//import CardContent from "react-native-paper/lib/typescript/components/Card/CardContent";
 import { Swipeable } from "react-native-gesture-handler";
 
 //appwrite 
