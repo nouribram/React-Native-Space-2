@@ -13,6 +13,7 @@ import { Swipeable } from "react-native-gesture-handler";
   events: string[];
   payload: any;
 }*/
+
 export default function Index() {
 
   const { signOut, user } = useAuth();
@@ -125,6 +126,7 @@ export default function Index() {
            if (direction === "left"){
             handleDeleteHabit(habit.$id);
            }
+           SwipeableRefs.current[habit.$id]?.close();
           }}
         >
         <Surface style={styles.card} elevation={0}>
