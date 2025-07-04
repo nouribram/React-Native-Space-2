@@ -29,7 +29,7 @@ export default function Index() {
    
   if (user) {
 
-  const channel = `databases.${DATABASE_ID}.collections.${HABITS_COLLECTION_ID}.documents`,
+  const habitsChannel = `databases.${DATABASE_ID}.collections.${HABITS_COLLECTION_ID}.documents`,
   const habitsSubscription = client.subscribe(
      channel,
     (response: RealtimeResponse) => {
