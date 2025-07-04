@@ -7,6 +7,7 @@ import { Databases, Query } from "react-native-appwrite";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 //import CardContent from "react-native-paper/lib/typescript/components/Card/CardContent";
 import { Swipeable } from "react-native-gesture-handler";
+import { HabitCompletion } from "@/types/database.type";
 
 //appwrite 
 /*export interface RealtimeResponse {
@@ -18,8 +19,10 @@ export default function Index() {
 
   const { signOut, user } = useAuth();
  
-  const [habits, setHabits] = useState<Habit[]>()
+  const [habits, setHabits] = useState<Habit[]>();
  
+  const [completedHabits, setCompletedHabits] = useState<string[]>()
+
   const SwipeableRefs = useRef<{ [key: string]: Swipeable | null}> ({})
 
  useEffect(() => {
@@ -49,6 +52,7 @@ export default function Index() {
   );
 
    fetchHabits();
+   fetchTodayCompletions();
 
    return () => {
     habitsSubscription();
@@ -56,14 +60,23 @@ export default function Index() {
   }
  }, [user]);
  
-  const fetchHabits = async () => {
+  const fetchTodayCompletions = async () => {
     try {
+      const today = new Date()
+      today.setHours(0, 0, 0, 0);
       const response = await databases.listDocuments(
          DATABASE_ID,
-         HABITS_COLLECTION_ID, 
-         [Query.equal("user_id", user?.$id ?? "" )]
+         COMPLETIONS_COLLECTION_ID, 
+         [
+          Query.equal("user_id", user?.$id ?? "" ), 
+          Query.greaterThanEqual("completed_at", today.toISOString()),
+
+         ]
         );
-        setHabits(response.documents as Habit[]);
+          
+        const completions = response.documents as HabitCompletion[]
+
+        setCompletedHabits(completions.map((c) => c.habit_id));
           
     } catch (error) {
       console.error(error);
@@ -71,9 +84,9 @@ export default function Index() {
   };
   
   const handleDeleteHabit = async (id: string) => {
-     if  (!user) return;
+     if  (!user || completedHabits?.includes(id)) return;
     try {
-           
+        const currentDate = new Date().toISOString()
         await databases.createDocument(
         DATABASE_ID,
         COMPLETIONS_COLLECTION_ID, 
@@ -91,9 +104,10 @@ export default function Index() {
       {
        if (!habit) return; 
        await databases.updateDocument(DATABASE_ID, HABITS_COLLECTION_ID, id, {
-        streak_count: 
-       })
-      }
+         streak_count: habit.streak_count + 1,
+         last_completed: currentDate,
+       });
+      
       
       } catch (error) {
          console.error(error);
@@ -147,6 +161,9 @@ export default function Index() {
           onSwipeableOpen={(direction) => {
            if (direction === "left"){
             handleDeleteHabit(habit.$id);
+           } else if (direction === "right")
+           {
+               handleCompleteHabit(habit.$id);
            }
            SwipeableRefs.current[habit.$id]?.close();
           }}
