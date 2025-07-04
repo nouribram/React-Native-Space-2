@@ -17,6 +17,7 @@ import { Swipeable } from "react-native-gesture-handler";
 export default function Index() {
 
   const { signOut, user } = useAuth();
+ 
   const [habits, setHabits] = useState<Habit[]>()
  
   const SwipeableRefs = useRef<{ [key: string]: Swipeable | null}> ({})
@@ -70,10 +71,31 @@ export default function Index() {
   };
   
   const handleDeleteHabit = async (id: string) => {
-       try {
+     if  (!user) return;
+    try {
            
-        await databases.deleteDocument(DATABASE_ID, HABITS_COLLECTION_ID, id);
-       } catch (error) {
+        await databases.createDocument(
+        DATABASE_ID,
+        COMPLETIONS_COLLECTION_ID, 
+        ID.unique(),
+        {
+            
+          habit_id: id,
+          user_id: user.$id,
+          completed_at: new Date().toISOString(),
+
+       }
+      );
+
+      const habit = habits?.find((h) => h.$id === id)
+      {
+       if (!habit) return; 
+       await databases.updateDocument(DATABASE_ID, HABITS_COLLECTION_ID, id, {
+        streak_count: 
+       })
+      }
+      
+      } catch (error) {
          console.error(error);
        }
   };
