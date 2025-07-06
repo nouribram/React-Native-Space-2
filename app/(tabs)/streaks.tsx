@@ -1,67 +1,24 @@
 import { Text, View } from "react-native";
+import { useState } from "react";
+import { HabitCompletion } from "@/types/database.type";
+
+
 
 export default function StreakScreen() {
    
+    const [habits, setHabits] = useState<Habit[]>();
    
+    const [completedHabits, setCompletedHabits] = useState<HabitCompletion[]>()
+  
+    const {user} = useAuth();
+    
+    
     useEffect(() => {
       
-     if (user) {
-   
-     const habitsChannel = `databases.${DATABASE_ID}.collections.${HABITS_COLLECTION_ID}.documents`,
-     const habitsSubscription = client.subscribe(
-        habitsChannel,
-       (response: RealtimeResponse) => {
-         if(
-           response.events.includes(
-           "databases.*.collections.*.documents.*.create"
-         )
-       ){
-           fetchHabits();
-   
-       } else if(
-           response.events.includes(
-           "databases.*.collections.*.documents.*.update"
-         )
-       ){
-           fetchHabits();
-       }
-       
-      }
-     );
-   
-   
-     
-     const completionsChannel = `databases.${DATABASE_ID}.collections.${COMOLETIONS_COLLECTION_ID}.documents`,
-     const completionsSubscription = client.subscribe(
-        completionsChannel,
-       (response: RealtimeResponse) => {
-         if(
-           response.events.includes(
-           "databases.*.collections.*.documents.*.create"
-         )
-       ){
-           fetchTodayCompletions();
-   
-       } else if(
-          response.events.includes(
-           "databases.*.collections.*.documents.*.update"
-         )
-       ){
-           fetchHabits();
-       }
-       
-      }
-     );
-   
-   
+     if (user) {  
       fetchHabits();
       fetchTodayCompletions();
-   
-      return () => {
-       habitsSubscription();
-       completionsSubscription();
       }
-     }
     }, [user]);
    
     return (
