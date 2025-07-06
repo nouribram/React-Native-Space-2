@@ -30,6 +30,7 @@ export default function Index() {
   if (user) {
 
   const habitsChannel = `databases.${DATABASE_ID}.collections.${HABITS_COLLECTION_ID}.documents`,
+  
   const habitsSubscription = client.subscribe(
      habitsChannel,
     (response: RealtimeResponse) => {
@@ -54,6 +55,7 @@ export default function Index() {
 
   
   const completionsChannel = `databases.${DATABASE_ID}.collections.${COMOLETIONS_COLLECTION_ID}.documents`,
+  
   const completionsSubscription = client.subscribe(
      completionsChannel,
     (response: RealtimeResponse) => {
@@ -77,6 +79,7 @@ export default function Index() {
 
 
    fetchHabits();
+  
    fetchTodayCompletions();
 
    return () => {
