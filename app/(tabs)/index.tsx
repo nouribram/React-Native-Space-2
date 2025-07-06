@@ -153,7 +153,7 @@ export default function Index() {
       <MaterialCommunityIcons 
       name="check-circle-outline" 
        size={32} 
-       color={"#ffff"}/>
+       color={"#fff"}/>
       )}
     </View>
   );
