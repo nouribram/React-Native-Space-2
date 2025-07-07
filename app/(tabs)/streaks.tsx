@@ -343,7 +343,7 @@ const styles = StyleSheet.create({
 
   rankingBadgeText: {
     fontWeight: "bold",
-    color: "#fff",
+    color: "#fffff",
     fontSize: 15,
   },
 
